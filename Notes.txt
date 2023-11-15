@@ -1,0 +1,136 @@
+Coding Challenges.
+Sum of an array:
+Method1: 
+function simpleArraySum(ar) {
+    // Write your code here
+    let sum = 0;
+    ar.forEach(function(number){
+         sum += Number(number);
+    })
+    return sum;
+}
+function simpleArraySum(ar) {
+    // Write your code here
+    const sum = ar.reduce((accumulator, currentValue) => accumulator + currentValue, 0)
+    return sum;
+}
+
+Factorials.
+function extraLongFactorials(n) {
+    // Write your code here
+     if (n === 0 || n === 1) {
+        return 1;
+    } 
+    
+    let result = BigInt(1);
+    for (let i = 2n; i <= BigInt(n); i++) {
+        result *= i;
+    }
+    
+   console.log(result.toString());
+}
+
+Matching ball types in an array:
+function organizingContainers(container) {
+    const n = container.length;
+
+    // Calculate the sum of balls in each container and the sum of balls of each type
+    const containerSum = new Array(n).fill(0);
+    const ballTypeSum = new Array(n).fill(0);
+
+    for (let i = 0; i < n; i++) {
+        for (let j = 0; j < n; j++) {
+            containerSum[i] += container[i][j];
+            ballTypeSum[j] += container[i][j];
+        }
+    }
+
+    // Sort the sums arrays
+    containerSum.sort((a, b) => a - b);
+    ballTypeSum.sort((a, b) => a - b);
+
+    // Check if the sorted arrays are equal
+    for (let i = 0; i < n; i++) {
+        if (containerSum[i] !== ballTypeSum[i]) {
+            return "Impossible";
+        }
+    }
+
+    // If the arrays are equal, it is possible to organize the containers
+    return "Possible";
+}
+
+1. Given a string s containing just the characters '(', ')', '[', ']', '{', '}', determine if the input string is valid.An input string is valid if:
+Open brackets must be closed by the same type of brackets, Open brackets must be closed in the correct order.
+function isValid(s) {
+    const stack = [];
+
+    const bracketPairs = {
+        '(': ')',
+        '[': ']',
+        '{': '}'
+    };
+
+    for (const char of s) {
+        if (bracketPairs[char]) {
+            // If it's an opening bracket, push it onto the stack
+            stack.push(char);
+        } else {
+            // If it's a closing bracket, check if it matches the last opening bracket
+            const lastOpeningBracket = stack.pop();
+            if (bracketPairs[lastOpeningBracket] !== char) {
+                // If it doesn't match, the string is invalid
+                return "invalid";
+            }
+        }
+    }
+
+    // After processing all characters, the string is valid if the stack is empty
+    return stack.length === 0 ? "valid" : "invalid";
+}
+
+// Example usage:
+console.log(isValid("()")); // Output: valid
+console.log(isValid("()[]{}")); // Output: valid
+console.log(isValid("(]")); // Output: invalid
+console.log(isValid("([)]")); // Output: invalid
+console.log(isValid("{[]}")); // Output: valid
+
+2. You are keeping score for a baseball game with strange rules. The game consists of several rounds where the scores of past rounds may affect future rounds' scores.
+
+At the beginning of the game, you start with an empty record. you are given a list of strings ops, where ops[i] is the ith operation you must apply to the record and is one of the following:
+
+An integer x - Record a new score of X.
+"+" - Record a new score that is the sum of the previous two scores. It is guaranteed that there will always be two previous scores.
+"D" - Record a new score that is double the previous score. It is guaranteed that there will always be a previous score.
+"C" - Invalidate the previous score, removing it from the record. It is guaranteed that there will always be a previous score.
+Return the sum of all the scores on the record.
+function calPoints(ops) {
+    const stack = [];
+
+    for (const op of ops) {
+        if (op === 'C') {
+            stack.pop();
+        } else if (op === 'D') {
+            stack.push(stack[stack.length - 1] * 2);
+        } else if (op === '+') {
+            stack.push(stack[stack.length - 1] + stack[stack.length - 2]);
+        } else {
+            stack.push(parseInt(op, 10));
+        }
+    }
+
+    return stack.reduce((sum, score) => sum + score, 0);
+}
+
+// Example usage:
+console.log(calPoints(["5", "2", "C", "D", "+"])); // Output: 30
+console.log(calPoints(["5", "-2", "4", "C", "D", "9", "+", "+"])); // Output: 27
+console.log(calPoints(["1"])); // Output: 1
+In this solution:
+We use a stack to keep track of the scores.
+We iterate through the ops array, and for each operation, we update the stack accordingly.
+For 'C', we remove the last score from the stack.
+For 'D', we double the last score and push it to the stack.
+For '+', we add the sum of the last two scores and push it to the stack.
+For an integer, we parse it and push it to the stack.
